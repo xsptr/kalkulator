@@ -1,0 +1,694 @@
+<!doctype html>
+<html lang="id">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="theme-color" content="#132d4a" />
+		<title>Kalkulator Cost Perjadin</title>
+		<style>
+			:root {
+				font-family:
+					Inter,
+					ui-sans-serif,
+					system-ui,
+					-apple-system,
+					BlinkMacSystemFont,
+					"Segoe UI",
+					sans-serif;
+				color: #172c43;
+				background: #f3f6fa;
+				font-variant-numeric: tabular-nums;
+			}
+			* {
+				box-sizing: border-box;
+			}
+			body {
+				margin: 0;
+			}
+			button,
+			input {
+				font: inherit;
+			}
+			button {
+				cursor: pointer;
+			}
+			.top {
+				background: #132d4a;
+				color: white;
+				padding: 28px max(20px, calc((100vw - 1100px) / 2)) 92px;
+			}
+			.brand {
+				display: flex;
+				gap: 12px;
+				align-items: center;
+				font-size: 13px;
+				font-weight: 700;
+				letter-spacing: 0.08em;
+				text-transform: uppercase;
+				color: #b8d6ee;
+			}
+			.brand-icon {
+				display: grid;
+				place-items: center;
+				width: 34px;
+				height: 34px;
+				border-radius: 10px;
+				background: #45c8ab;
+				color: #102f3d;
+				font-size: 19px;
+				letter-spacing: 0;
+			}
+			h1 {
+				margin: 24px 0 7px;
+				font-size: clamp(27px, 4vw, 39px);
+				line-height: 1.15;
+				letter-spacing: -0.035em;
+			}
+			.intro {
+				margin: 0;
+				color: #c6d6e5;
+				line-height: 1.55;
+				max-width: 680px;
+			}
+			main {
+				max-width: 1140px;
+				padding: 0 20px 48px;
+				margin: -61px auto 0;
+				position: relative;
+			}
+			.layout {
+				display: grid;
+				grid-template-columns: minmax(0, 1.12fr) minmax(320px, 0.88fr);
+				align-items: start;
+				gap: 20px;
+			}
+			.card {
+				background: white;
+				border: 1px solid #e3eaf1;
+				border-radius: 18px;
+				box-shadow: 0 10px 30px #142f4910;
+				overflow: hidden;
+			}
+			.card-head {
+				padding: 22px 25px 0;
+			}
+			h2 {
+				font-size: 19px;
+				margin: 0;
+				letter-spacing: -0.02em;
+			}
+			.sub {
+				font-size: 13px;
+				color: #64788b;
+				margin: 6px 0 0;
+				line-height: 1.5;
+			}
+			.section {
+				padding: 20px 25px 24px;
+				border-bottom: 1px solid #ecf0f4;
+			}
+			.section:last-child {
+				border-bottom: 0;
+			}
+			.section-title {
+				font-size: 13px;
+				text-transform: uppercase;
+				letter-spacing: 0.065em;
+				font-weight: 800;
+				color: #536e86;
+				margin: 0 0 15px;
+			}
+			.two {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 14px;
+			}
+			label {
+				display: block;
+				color: #344b61;
+				font-size: 13px;
+				font-weight: 650;
+				margin-bottom: 7px;
+			}
+			.field {
+				min-width: 0;
+			}
+			.input-wrap {
+				display: flex;
+				min-height: 46px;
+				border: 1px solid #d4dee8;
+				border-radius: 10px;
+				align-items: center;
+				overflow: hidden;
+				background: white;
+				transition:
+					border 0.15s,
+					box-shadow 0.15s;
+			}
+			.input-wrap:focus-within {
+				border-color: #167eaf;
+				box-shadow: 0 0 0 3px #167eaf20;
+			}
+			.prefix,
+			.suffix {
+				color: #667e93;
+				font-size: 13px;
+				padding: 0 12px;
+				flex: none;
+				background: #f7f9fb;
+				height: 46px;
+				display: flex;
+				align-items: center;
+			}
+			.prefix {
+				border-right: 1px solid #e4ebf0;
+			}
+			.suffix {
+				border-left: 1px solid #e4ebf0;
+			}
+			input {
+				border: 0;
+				outline: 0;
+				width: 100%;
+				min-width: 0;
+				padding: 0 12px;
+				height: 44px;
+				color: #122b43;
+				background: transparent;
+				font-weight: 600;
+			}
+			input[type="number"] {
+				appearance: textfield;
+				-moz-appearance: textfield;
+			}
+			input::-webkit-outer-spin-button,
+			input::-webkit-inner-spin-button {
+				-webkit-appearance: none;
+				margin: 0;
+			}
+			.item {
+				padding: 14px 0;
+				border-top: 1px solid #edf0f4;
+			}
+			.item:first-of-type {
+				padding-top: 0;
+				border-top: 0;
+			}
+			.item-title {
+				font-weight: 750;
+				margin-bottom: 11px;
+			}
+			.muted {
+				color: #698096;
+				font-size: 12px;
+				font-weight: 400;
+			}
+			.item-total {
+				color: #547087;
+				font-size: 13px;
+				text-align: right;
+				margin-top: 8px;
+			}
+			.item-total strong {
+				color: #193b57;
+			}
+			.error {
+				display: none;
+				color: #9d3036;
+				background: #fff0f1;
+				padding: 12px;
+				border-radius: 9px;
+				font-size: 13px;
+				line-height: 1.45;
+				margin: 0 0 15px;
+			}
+			.error.active {
+				display: block;
+			}
+			.action-row {
+				display: flex;
+				gap: 9px;
+				flex-wrap: wrap;
+				padding: 18px 25px 23px;
+			}
+			.button {
+				border-radius: 9px;
+				padding: 10px 14px;
+				font-weight: 700;
+				font-size: 13px;
+				border: 1px solid #cddce8;
+				background: #fff;
+				color: #183a55;
+			}
+			.button:hover {
+				background: #f1f7fa;
+			}
+			.button.primary {
+				background: #163e5c;
+				color: white;
+				border-color: #163e5c;
+			}
+			.button.primary:hover {
+				background: #245676;
+			}
+			.result {
+				padding: 23px 25px;
+			}
+			.result h2 {
+				margin-bottom: 19px;
+			}
+			.hero {
+				padding: 20px;
+				border-radius: 13px;
+				background: #eaf7f4;
+				border: 1px solid #c8e9df;
+			}
+			.hero .eyebrow {
+				text-transform: uppercase;
+				letter-spacing: 0.06em;
+				font-size: 11px;
+				color: #396b66;
+				font-weight: 850;
+			}
+			.hero .value {
+				color: #123b41;
+				font-size: clamp(25px, 3vw, 34px);
+				font-weight: 800;
+				margin: 6px 0;
+				letter-spacing: -0.04em;
+				overflow-wrap: anywhere;
+			}
+			.hero .hint {
+				margin: 0;
+				font-size: 12px;
+				color: #557675;
+				line-height: 1.4;
+			}
+			.rows {
+				margin-top: 19px;
+			}
+			.row {
+				display: flex;
+				justify-content: space-between;
+				align-items: baseline;
+				gap: 12px;
+				padding: 11px 0;
+				border-bottom: 1px solid #eef1f4;
+				font-size: 13px;
+			}
+			.row span:first-child {
+				color: #60758a;
+			}
+			.row strong {
+				text-align: right;
+				font-weight: 750;
+				color: #1b3850;
+				white-space: nowrap;
+			}
+			.row.emphasis {
+				font-weight: 800;
+				border-top: 1px solid #d6e3e9;
+				margin-top: 6px;
+			}
+			.row.emphasis span:first-child {
+				color: #233e54;
+			}
+			.row.emphasis strong {
+				font-size: 16px;
+			}
+			.note {
+				padding: 13px 15px;
+				margin-top: 17px;
+				background: #f5f8fa;
+				border-radius: 10px;
+				color: #657c90;
+				font-size: 12px;
+				line-height: 1.55;
+			}
+			.note strong {
+				color: #36536a;
+			}
+			.small-heading {
+				font-size: 12px;
+				color: #44627a;
+				font-weight: 800;
+				letter-spacing: 0.05em;
+				text-transform: uppercase;
+				margin: 22px 0 4px;
+			}
+			.footer {
+				text-align: center;
+				font-size: 12px;
+				color: #6c8092;
+				margin-top: 22px;
+			}
+			@media (max-width: 770px) {
+				.layout {
+					grid-template-columns: 1fr;
+				}
+				.top {
+					padding-bottom: 89px;
+				}
+				.result-card {
+					order: -1;
+				}
+			}
+			@media (max-width: 480px) {
+				.top {
+					padding: 24px 18px 85px;
+				}
+				main {
+					padding: 0 12px 38px;
+				}
+				.card-head,
+				.section,
+				.result {
+					padding-left: 18px;
+					padding-right: 18px;
+				}
+				.action-row {
+					padding-left: 18px;
+					padding-right: 18px;
+				}
+				.two {
+					gap: 10px;
+				}
+				.prefix,
+				.suffix {
+					padding: 0 9px;
+				}
+				input {
+					padding: 0 8px;
+				}
+			}
+			@media print {
+				:root {
+					background: white;
+				}
+				.top {
+					background: white;
+					color: #122b43;
+					padding: 0 0 20px;
+				}
+				.brand {
+					color: #295e7b;
+				}
+				.intro {
+					color: #536e86;
+				}
+				main {
+					margin: 0;
+					padding: 0;
+				}
+				.layout {
+					grid-template-columns: 1fr 1fr;
+				}
+				.card {
+					box-shadow: none;
+					break-inside: avoid;
+				}
+				.action-row,
+				.footer {
+					display: none;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<header class="top">
+			<div class="brand"><span class="brand-icon" aria-hidden="true">↗</span> Administrasi Perjalanan Dinas</div>
+			<h1>Kalkulator Cost Perjadin</h1>
+			<p class="intro">
+				Hitung biaya, kompensasi penginapan yang tidak dipakai, dan pelunasan atau pengembalian setelah DP.
+			</p>
+		</header>
+		<main>
+			<div class="layout">
+				<div class="card">
+					<div class="card-head">
+						<h2>Data perhitungan</h2>
+						<p class="sub">Ubah angka di bawah; hasil langsung diperbarui.</p>
+					</div>
+					<div class="section">
+						<p class="section-title">Biaya perjalanan</p>
+						<div class="item">
+							<div class="item-title">Transport</div>
+							<div class="two">
+								<div class="field">
+									<label for="transportQty">Jumlah perjalanan</label>
+									<div class="input-wrap">
+										<input id="transportQty" type="number" inputmode="numeric" min="0" step="1" value="2" /><span
+											class="suffix"
+											>kali</span
+										>
+									</div>
+								</div>
+								<div class="field">
+									<label for="transportRate">Biaya per perjalanan</label>
+									<div class="input-wrap">
+										<span class="prefix">Rp</span
+										><input id="transportRate" type="number" inputmode="numeric" min="0" step="1" value="283000" />
+									</div>
+								</div>
+							</div>
+							<div class="item-total">Subtotal: <strong id="transportTotal">—</strong></div>
+						</div>
+						<div class="item">
+							<div class="item-title">Penginapan <span class="muted">(jatah dari jumlah malam di sini)</span></div>
+							<div class="two">
+								<div class="field">
+									<label for="hotelQty">Jatah menginap</label>
+									<div class="input-wrap">
+										<input id="hotelQty" type="number" inputmode="numeric" min="0" step="1" value="3" /><span
+											class="suffix"
+											>malam</span
+										>
+									</div>
+								</div>
+								<div class="field">
+									<label for="hotelRate">Tarif per malam</label>
+									<div class="input-wrap">
+										<span class="prefix">Rp</span
+										><input id="hotelRate" type="number" inputmode="numeric" min="0" step="1" value="735000" />
+									</div>
+								</div>
+							</div>
+							<div class="item-total">Jatah biaya penginapan: <strong id="hotelTotal">—</strong></div>
+						</div>
+						<div class="item">
+							<div class="item-title">Uang harian</div>
+							<div class="two">
+								<div class="field">
+									<label for="dailyQty">Jumlah hari</label>
+									<div class="input-wrap">
+										<input id="dailyQty" type="number" inputmode="numeric" min="0" step="1" value="4" /><span
+											class="suffix"
+											>hari</span
+										>
+									</div>
+								</div>
+								<div class="field">
+									<label for="dailyRate">Tarif per hari</label>
+									<div class="input-wrap">
+										<span class="prefix">Rp</span
+										><input id="dailyRate" type="number" inputmode="numeric" min="0" step="1" value="430000" />
+									</div>
+								</div>
+							</div>
+							<div class="item-total">Subtotal: <strong id="dailyTotal">—</strong></div>
+						</div>
+					</div>
+					<div class="section">
+						<p class="section-title">Realisasi &amp; pembayaran</p>
+						<div class="two">
+							<div class="field">
+								<label for="usedNights">Penginapan dipakai</label>
+								<div class="input-wrap">
+									<input id="usedNights" type="number" inputmode="numeric" min="0" step="1" value="3" /><span
+										class="suffix"
+										>malam</span
+									>
+								</div>
+							</div>
+							<div class="field">
+								<label for="compRate">Kompensasi sisa</label>
+								<div class="input-wrap">
+									<input
+										id="compRate"
+										type="number"
+										inputmode="decimal"
+										min="0"
+										max="100"
+										step="0.01"
+										value="30"
+									/><span class="suffix">%</span>
+								</div>
+							</div>
+							<div class="field">
+								<label for="dp">DP yang sudah dibayar</label>
+								<div class="input-wrap">
+									<span class="prefix">Rp</span
+									><input id="dp" type="number" inputmode="numeric" min="0" step="1" value="2500000" />
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="action-row">
+						<button type="button" id="reset" class="button">Kembalikan contoh Excel</button
+						><button type="button" id="print" class="button primary">Cetak / simpan PDF</button>
+					</div>
+				</div>
+				<div class="card result-card">
+					<div class="result">
+						<h2>Hasil perhitungan</h2>
+						<div id="error" class="error" role="alert"></div>
+						<div class="hero">
+							<div class="eyebrow" id="settlementTitle">Pelunasan</div>
+							<div class="value" id="settlement">—</div>
+							<p class="hint" id="settlementHint">Jumlah yang masih perlu dibayar setelah DP.</p>
+						</div>
+						<div class="small-heading">Rincian biaya</div>
+						<div class="rows">
+							<div class="row"><span>Saldo awal / seluruh jatah</span><strong id="initial">—</strong></div>
+							<div class="row"><span>Transport</span><strong id="transportUsed">—</strong></div>
+							<div class="row"><span>Penginapan terpakai</span><strong id="hotelUsed">—</strong></div>
+							<div class="row"><span>Uang harian</span><strong id="dailyUsed">—</strong></div>
+							<div class="row"><span>Realisasi (tanpa kompensasi)</span><strong id="realization">—</strong></div>
+							<div class="row"><span>Sisa jatah penginapan</span><strong id="hotelRemainder">—</strong></div>
+							<div class="row"><span>Kompensasi sisa penginapan</span><strong id="compensation">—</strong></div>
+							<div class="row"><span>Pengembalian jatah penginapan</span><strong id="hotelRefund">—</strong></div>
+							<div class="row emphasis"><span>Total biaya akhir</span><strong id="finalCost">—</strong></div>
+						</div>
+						<div class="small-heading">Posisi pembayaran</div>
+						<div class="rows">
+							<div class="row"><span>DP dibayarkan</span><strong id="dpShown">—</strong></div>
+							<div class="row"><span>Sisa DP setelah penginapan terpakai</span><strong id="dpRemainder">—</strong></div>
+							<div class="row"><span>Total sisa (sisa DP + pelunasan)</span><strong id="otherDue">—</strong></div>
+							<div class="row emphasis"><span>Selisih bersih terhadap DP</span><strong id="net">—</strong></div>
+						</div>
+						<div class="note">
+							<strong>Rumus:</strong> total biaya akhir = transport + uang harian + penginapan terpakai + kompensasi ×
+							biaya penginapan yang tidak dipakai. Selisih bersih = total biaya akhir − DP. Angka negatif berarti uang
+							dikembalikan.
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="footer">Perhitungan berjalan di perangkat Anda; data tidak dikirim ke server.</div>
+		</main>
+		<script>
+			(() => {
+				const defaults = {
+					transportQty: 2,
+					transportRate: 283000,
+					hotelQty: 3,
+					hotelRate: 735000,
+					dailyQty: 4,
+					dailyRate: 430000,
+					usedNights: 3,
+					compRate: 30,
+					dp: 2500000
+				};
+				const ids = Object.keys(defaults);
+				const el = id => document.getElementById(id);
+				const rupiah = n =>
+					new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 }).format(n);
+				const show = (id, n) => {
+					el(id).textContent = rupiah(n);
+				};
+				function update() {
+					const v = Object.fromEntries(ids.map(id => [id, Number(el(id).value)]));
+					const error = ids.find(
+						id =>
+							el(id).value.trim() === "" ||
+							!Number.isFinite(v[id]) ||
+							v[id] < 0 ||
+							(id !== "compRate" && !Number.isInteger(v[id]))
+					);
+					let message = error
+						? "Isi seluruh kolom dengan angka yang valid dan tidak negatif. Jumlah serta tarif menggunakan angka bulat."
+						: "";
+					if (!message && v.compRate > 100) message = "Persentase kompensasi maksimal 100%.";
+					if (!message && v.usedNights > v.hotelQty)
+						message = "Penginapan dipakai tidak boleh melebihi jatah menginap.";
+					el("error").textContent = message;
+					el("error").classList.toggle("active", Boolean(message));
+					if (message) {
+						for (const id of [
+							"transportTotal",
+							"hotelTotal",
+							"dailyTotal",
+							"initial",
+							"transportUsed",
+							"hotelUsed",
+							"dailyUsed",
+							"realization",
+							"hotelRemainder",
+							"compensation",
+							"hotelRefund",
+							"finalCost",
+							"dpShown",
+							"dpRemainder",
+							"otherDue",
+							"net",
+							"settlement"
+						])
+							el(id).textContent = "—";
+						return;
+					}
+					const transport = v.transportQty * v.transportRate;
+					const hotel = v.hotelQty * v.hotelRate;
+					const daily = v.dailyQty * v.dailyRate;
+					const initial = transport + hotel + daily;
+					const hotelUsed = v.usedNights * v.hotelRate;
+					const hotelRemainder = hotel - hotelUsed;
+					const compensation = (hotelRemainder * v.compRate) / 100;
+					const hotelRefund = hotelRemainder - compensation;
+					const realization = initial - hotelRemainder;
+					const finalCost = initial - hotelRefund;
+					const net = finalCost - v.dp;
+					const dpRemainder = v.dp - hotelUsed;
+					// B7 in the Excel sheet: (saldo awal - pengembalian penginapan) - DP.
+					show("transportTotal", transport);
+					show("hotelTotal", hotel);
+					show("dailyTotal", daily);
+					show("initial", initial);
+					show("transportUsed", transport);
+					show("hotelUsed", hotelUsed);
+					show("dailyUsed", daily);
+					show("realization", realization);
+					show("hotelRemainder", hotelRemainder);
+					show("compensation", compensation);
+					show("hotelRefund", hotelRefund);
+					show("finalCost", finalCost);
+					show("dpShown", v.dp);
+					show("dpRemainder", dpRemainder);
+					// H9 from Excel is the sum of H8 (sisa DP) and B7 (pelunasan).
+					show("otherDue", dpRemainder + net);
+					show("net", net);
+					el("settlementTitle").textContent =
+						net < 0 ? "Pengembalian kepada Anda" : net === 0 ? "Sudah lunas" : "Pelunasan yang perlu dibayar";
+					el("settlementHint").textContent =
+						net < 0
+							? "DP lebih besar daripada total biaya akhir."
+							: net === 0
+								? "DP tepat menutup total biaya akhir."
+								: "Total biaya akhir dikurangi DP yang sudah dibayarkan.";
+					show("settlement", Math.abs(net));
+				}
+				ids.forEach(id => el(id).addEventListener("input", update));
+				el("reset").addEventListener("click", () => {
+					ids.forEach(id => {
+						el(id).value = defaults[id];
+					});
+					update();
+				});
+				el("print").addEventListener("click", () => {
+					update();
+					if (!el("error").textContent) window.print();
+				});
+				update();
+			})();
+		</script>
+	</body>
+</html>
